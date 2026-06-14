@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-STORE — إدارة محل الموبايلات</title>
+  <meta name="description" content="نظام متكامل لإدارة محل الموبايلات - تتبع المبيعات والمصاريف والصيانة والأرباح">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===================== LOGIN SECTION ===================== -->
+  <section id="login-section">
+    <div class="login-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="login-container">
+      <div class="login-logo">
+        <div class="logo-icon-wrap">📱</div>
+        <h1>AI-STORE</h1>
+        <p>نظام إدارة محل الموبايلات</p>
+      </div>
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="login-email">البريد الإلكتروني</label>
+          <input type="email" id="login-email" placeholder="example@email.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">كلمة المرور</label>
+          <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <div id="login-error" class="error-msg" style="display:none;"></div>
+        <button type="submit" class="btn-primary btn-full" id="login-submit-btn">
+          <span id="login-btn-text">دخول</span>
+        </button>
+      </form>
+      <p class="login-footer-text">AI-STORE &copy; 2025 — جميع الحقوق محفوظة</p>
+    </div>
+  </section>
+
+  <!-- ===================== APP SECTION ===================== -->
+  <section id="app-section" style="display:none;">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span class="logo-emoji">📱</span>
+          <span class="logo-text">AI-STORE</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-view="dashboard" id="nav-dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">لوحة التحكم</span>
+        </a>
+        <a href="#" class="nav-item" data-view="inventory" id="nav-inventory">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">المخزون</span>
+        </a>
+        <a href="#" class="nav-item" data-view="sales" id="nav-sales">
+          <span class="nav-icon">💰</span>
+          <span class="nav-label">المبيعات</span>
+        </a>
+        <a href="#" class="nav-item" data-view="maintenance" id="nav-maintenance">
+          <span class="nav-icon">🛠️</span>
+          <span class="nav-label">الصيانة</span>
+        </a>
+        <a href="#" class="nav-item" data-view="expenses" id="nav-expenses">
+          <span class="nav-icon">💸</span>
+          <span class="nav-label">المصاريف</span>
+        </a>
+        <a href="#" class="nav-item" data-view="reports" id="nav-reports">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">التقارير</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info-card">
+          <span class="user-avatar">👤</span>
+          <div class="user-details">
+            <span id="user-email-display" class="user-email-text">...</span>
+            <span class="user-role">مدير</span>
+          </div>
+        </div>
+        <button id="logout-btn" class="logout-btn">🚪 تسجيل خروج</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <h2 id="page-title">لوحة التحكم</h2>
+        <div class="topbar-right">
+          <div id="current-date" class="current-date-badge"></div>
+        </div>
+      </div>
+
+      <!-- ========= DASHBOARD VIEW ========= -->
+      <div id="view-dashboard" class="view active">
+        <div class="stats-grid">
+          <div class="stat-card profit-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">📈</div>
+            <div class="stat-info">
+              <div class="stat-label">صافي ربح اليوم</div>
+              <div class="stat-value" id="today-profit">0 ج.م</div>
+            </div>
+          </div>
+          <div class="stat-card sales-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">💰</div>
+            <div class="stat-info">
+              <div class="stat-label">إيراد المبيعات</div>
+              <div class="stat-value" id="today-sales">0 ج.م</div>
+            </div>
+          </div>
+          <div class="stat-card maint-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">🛠️</div>
+            <div class="stat-info">
+              <div class="stat-label">إيراد الصيانة</div>
+              <div class="stat-value" id="today-maintenance">0 ج.م</div>
+            </div>
+          </div>
+          <div class="stat-card expense-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">💸</div>
+            <div class="stat-info">
+              <div class="stat-label">مصاريف اليوم</div>
+              <div class="stat-value" id="today-expenses">0 ج.م</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3>📊 الأرباح — آخر 7 أيام</h3>
+            </div>
+            <div class="card-body">
+              <canvas id="profit-chart" height="140"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>⚡ آخر العمليات</h3>
+            </div>
+            <div class="card-body no-padding">
+              <div id="recent-transactions" class="recent-list">
+                <div class="empty-state">لا توجد عمليات بعد</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= INVENTORY VIEW ========= -->
+      <div id="view-inventory" class="view">
+        <div class="view-toolbar">
+          <input type="text" id="inventory-search" class="search-input" placeholder="🔍 ابحث في المخزون...">
+          <button class="btn-primary" id="add-product-btn">＋ إضافة منتج</button>
+        </div>
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>الجهاز / الموديل</th>
+                  <th>سعر الشراء</th>
+                  <th>سعر البيع</th>
+                  <th>هامش الربح</th>
+                  <th>الكمية</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-tbody">
+                <tr><td colspan="6" class="empty-state">جاري التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= SALES VIEW ========= -->
+      <div id="view-sales" class="view">
+        <div class="view-toolbar">
+          <input type="date" id="sales-date-filter" class="date-input">
+          <button class="btn-primary" id="add-sale-btn">＋ تسجيل بيعة</button>
+        </div>
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>المنتج</th>
+                  <th>الكمية</th>
+                  <th>سعر البيع</th>
+                  <th>التكلفة</th>
+                  <th>الربح</th>
+                  <th>العميل</th>
+                  <th>سجّله</th>
+                </tr>
+              </thead>
+              <tbody id="sales-tbody">
+                <tr><td colspan="8" class="empty-state">جاري التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= MAINTENANCE VIEW ========= -->
+      <div id="view-maintenance" class="view">
+        <div class="view-toolbar">
+          <select id="maintenance-status-filter" class="select-input">
+            <option value="all">كل الحالات</option>
+            <option value="in_progress">⏳ قيد الإصلاح</option>
+            <option value="ready">✅ جاهز للاستلام</option>
+            <option value="delivered">🏁 تم الاستلام</option>
+          </select>
+          <button class="btn-primary" id="add-maintenance-btn">＋ طلب صيانة جديد</button>
+        </div>
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>العميل</th>
+                  <th>الجهاز / المشكلة</th>
+                  <th>تكلفة القطع</th>
+                  <th>سعر الصيانة</th>
+                  <th>الربح</th>
+                  <th>الحالة</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="maintenance-tbody">
+                <tr><td colspan="8" class="empty-state">جاري التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= EXPENSES VIEW ========= -->
+      <div id="view-expenses" class="view">
+        <div class="view-toolbar">
+          <input type="date" id="expenses-date-filter" class="date-input">
+          <button class="btn-primary" id="add-expense-btn">＋ إضافة مصروف</button>
+        </div>
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>النوع</th>
+                  <th>المبلغ</th>
+                  <th>ملاحظات</th>
+                  <th>سجّله</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="expenses-tbody">
+                <tr><td colspan="6" class="empty-state">جاري التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========= REPORTS VIEW ========= -->
+      <div id="view-reports" class="view">
+        <div class="card reports-filter-card">
+          <div class="filter-row">
+            <div class="form-group">
+              <label>من تاريخ</label>
+              <input type="date" id="report-from" class="date-input">
+            </div>
+            <div class="form-group">
+              <label>إلى تاريخ</label>
+              <input type="date" id="report-to" class="date-input">
+            </div>
+            <div class="filter-actions">
+              <button class="btn-secondary" id="report-today-btn">اليوم</button>
+              <button class="btn-secondary" id="report-week-btn">هذا الأسبوع</button>
+              <button class="btn-secondary" id="report-month-btn">هذا الشهر</button>
+              <button class="btn-primary" id="generate-report-btn">🔍 عرض التقرير</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card profit-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">📈</div>
+            <div class="stat-info">
+              <div class="stat-label">صافي الربح</div>
+              <div class="stat-value" id="report-net-profit">— ج.م</div>
+            </div>
+          </div>
+          <div class="stat-card sales-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">💰</div>
+            <div class="stat-info">
+              <div class="stat-label">ربح المبيعات</div>
+              <div class="stat-value" id="report-sales-profit">— ج.م</div>
+            </div>
+          </div>
+          <div class="stat-card maint-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">🛠️</div>
+            <div class="stat-info">
+              <div class="stat-label">ربح الصيانة</div>
+              <div class="stat-value" id="report-maint-profit">— ج.م</div>
+            </div>
+          </div>
+          <div class="stat-card expense-card">
+            <div class="stat-card-bg"></div>
+            <div class="stat-icon-wrap">💸</div>
+            <div class="stat-info">
+              <div class="stat-label">إجمالي المصاريف</div>
+              <div class="stat-value" id="report-total-expenses">— ج.م</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>📋 تفاصيل العمليات</h3>
+            <button class="btn-secondary" id="export-pdf-btn">📄 تصدير PDF</button>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>النوع</th>
+                  <th>الوصف</th>
+                  <th>المبلغ</th>
+                  <th>صافي الربح</th>
+                </tr>
+              </thead>
+              <tbody id="report-tbody">
+                <tr><td colspan="5" class="empty-state">اختر فترة زمنية وانقر "عرض التقرير"</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <!-- ===================== MODALS ===================== -->
+
+  <!-- Product Modal -->
+  <div id="product-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="product-modal-title">إضافة منتج جديد</h3>
+        <button class="modal-close" data-close="product-modal" aria-label="إغلاق">✕</button>
+      </div>
+      <form id="product-form" class="modal-body">
+        <input type="hidden" id="product-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-name">اسم الجهاز *</label>
+            <input type="text" id="product-name" placeholder="مثال: iPhone 15 Pro" required>
+          </div>
+          <div class="form-group">
+            <label for="product-model">الموديل / المواصفات</label>
+            <input type="text" id="product-model" placeholder="مثال: 256GB — أسود">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-buy-price">سعر الشراء (ج.م) *</label>
+            <input type="number" id="product-buy-price" placeholder="0" min="0" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="product-sell-price">سعر البيع (ج.م) *</label>
+            <input type="number" id="product-sell-price" placeholder="0" min="0" step="0.01" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="product-quantity">الكمية *</label>
+            <input type="number" id="product-quantity" placeholder="0" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="product-imei">IMEI (اختياري)</label>
+            <input type="text" id="product-imei" placeholder="15 رقم">
+          </div>
+        </div>
+        <div id="product-margin-preview" class="profit-preview" style="display:none;">
+          <span>💡 هامش الربح المتوقع: </span>
+          <strong id="product-margin-value">0 ج.م</strong>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close="product-modal">إلغاء</button>
+          <button type="submit" class="btn-primary">💾 حفظ المنتج</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sale Modal -->
+  <div id="sale-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>💰 تسجيل بيعة جديدة</h3>
+        <button class="modal-close" data-close="sale-modal" aria-label="إغلاق">✕</button>
+      </div>
+      <form id="sale-form" class="modal-body">
+        <div class="form-group">
+          <label for="sale-product">المنتج *</label>
+          <select id="sale-product" required>
+            <option value="">اختر منتج من المخزون...</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sale-quantity">الكمية *</label>
+            <input type="number" id="sale-quantity" placeholder="1" min="1" value="1" required>
+          </div>
+          <div class="form-group">
+            <label for="sale-sell-price">سعر البيع الفعلي (ج.م) *</label>
+            <input type="number" id="sale-sell-price" placeholder="0" min="0" step="0.01" required>
+          </div>
+        </div>
+        <div class="profit-preview" id="sale-profit-preview" style="display:none;">
+          <span>📈 الربح المتوقع: </span>
+          <strong id="sale-profit-value">0 ج.م</strong>
+        </div>
+        <div class="form-group">
+          <label for="sale-customer">اسم العميل (اختياري)</label>
+          <input type="text" id="sale-customer" placeholder="اسم العميل">
+        </div>
+        <div class="form-group">
+          <label for="sale-notes">ملاحظات</label>
+          <textarea id="sale-notes" placeholder="أي ملاحظات إضافية..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close="sale-modal">إلغاء</button>
+          <button type="submit" class="btn-primary">✅ تسجيل البيعة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Maintenance Modal -->
+  <div id="maintenance-modal" class="modal-overlay" style="display:none;">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3 id="maintenance-modal-title">🛠️ طلب صيانة جديد</h3>
+        <button class="modal-close" data-close="maintenance-modal" aria-label="إغلاق">✕</button>
+      </div>
+      <form id="maintenance-form" class="modal-body">
+        <input type="hidden" id="maintenance-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="maintenance-customer">اسم العميل *</label>
+            <input type="text" id="maintenance-customer" placeholder="الاسم الكامل" required>
+          </div>
+          <div class="form-group">
+            <label for="maintenance-phone">رقم التليفون</label>
+            <input type="tel" id="maintenance-phone" placeholder="01xxxxxxxxx">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="maintenance-device">نوع الجهاز *</label>
+            <input type="text" id="maintenance-device" placeholder="مثال: Samsung S24 Ultra" required>
+          </div>
+          <div class="form-group">
+            <label for="maintenance-status">الحالة</label>
+            <select id="maintenance-status">
+              <option value="in_progress">⏳ قيد الإصلاح</option>
+              <option value="ready">✅ جاهز للاستلام</option>
+              <option value="delivered">🏁 تم الاستلام</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="maintenance-problem">المشكلة / وصف العمل *</label>
+          <textarea id="maintenance-problem" placeholder="اوصف المشكلة بالتفصيل..." required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="maintenance-parts-cost">تكلفة قطع الغيار (ج.م)</label>
+            <input type="number" id="maintenance-parts-cost" placeholder="0" min="0" step="0.01" value="0">
+          </div>
+          <div class="form-group">
+            <label for="maintenance-fee">سعر الصيانة المحصّل (ج.م) *</label>
+            <input type="number" id="maintenance-fee" placeholder="0" min="0" step="0.01" required>
+          </div>
+        </div>
+        <div class="profit-preview" id="maintenance-profit-preview">
+          <span>💡 صافي ربح الصيانة: </span>
+          <strong id="maintenance-profit-value">0 ج.م</strong>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close="maintenance-modal">إلغاء</button>
+          <button type="submit" class="btn-primary">💾 حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Expense Modal -->
+  <div id="expense-modal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>💸 إضافة مصروف</h3>
+        <button class="modal-close" data-close="expense-modal" aria-label="إغلاق">✕</button>
+      </div>
+      <form id="expense-form" class="modal-body">
+        <div class="form-group">
+          <label for="expense-type">نوع المصروف *</label>
+          <select id="expense-type" required>
+            <option value="إيجار">🏠 إيجار</option>
+            <option value="فاتورة كهرباء">⚡ فاتورة كهرباء</option>
+            <option value="فاتورة إنترنت">🌐 فاتورة إنترنت</option>
+            <option value="رواتب">👷 رواتب</option>
+            <option value="شراء بضاعة">📦 شراء بضاعة</option>
+            <option value="أدوات ومستلزمات">🔧 أدوات ومستلزمات</option>
+            <option value="مصاريف متنوعة">📋 مصاريف متنوعة</option>
+            <option value="غيره">🗂️ غيره</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="expense-amount">المبلغ (ج.م) *</label>
+          <input type="number" id="expense-amount" placeholder="0" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="expense-notes">ملاحظات</label>
+          <textarea id="expense-notes" placeholder="تفاصيل إضافية..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close="expense-modal">إلغاء</button>
+          <button type="submit" class="btn-primary">💾 حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div id="confirm-modal" class="modal-overlay" style="display:none;">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>⚠️ تأكيد الحذف</h3>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-secondary); line-height:1.7;">
+          هل أنت متأكد من حذف هذا العنصر؟<br>
+          <strong style="color:var(--loss);">لا يمكن التراجع عن هذا الإجراء.</strong>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close="confirm-modal">إلغاء</button>
+        <button class="btn-danger" id="confirm-delete-btn">🗑️ حذف</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" style="display:none;"></div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/inventory.js"></script>
+  <script src="js/sales.js"></script>
+  <script src="js/maintenance.js"></script>
+  <script src="js/expenses.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
